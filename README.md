@@ -28,3 +28,20 @@ Site: https://journey-cloud.github.io/self-hosted-boilerplate/docker-compose-win
 2. Run `docker compose up -d`
 
 `docker exec -it journey-sync-ts tailscale serve status`
+
+## Joplin Server
+
+Sites:
+- https://joplinapp.org
+- https://joplinapp.org/help/apps/joplin_server_business
+
+## Setup
+
+1. Run `docker compose --profile server up -d`
+
+#### Default Admin User
+
+```
+Email:    admin@localhost
+Password: admin
+```
