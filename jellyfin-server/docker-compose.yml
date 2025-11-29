@@ -1,19 +1,40 @@
 # https://jellyfin.org/docs/general/installation/container/
 
 services:
+  jellyfin-ts:
+      image: tailscale/tailscale:latest
+      container_name: jellyfin-ts
+      hostname: chocobo-tv
+      cap_add:
+        - NET_ADMIN
+        - NET_RAW
+      environment:
+        - TS_AUTHKEY=${TS_AUTHKEY}
+        - TS_EXTRA_ARGS=--advertise-tags=tag:container
+        - TS_STATE_DIR=/var/lib/tailscale
+        - TS_USERSPACE=false
+        - TS_SERVE_CONFIG=/config/tailscale.json
+      volumes:
+        - ${TS_STATE_LOCATION}:/var/lib/tailscale
+        - ./config:/config
+      devices:
+        - /dev/net/tun:/dev/net/tun
+      restart: unless-stopped
+
   jellyfin:
     image: jellyfin/jellyfin
     container_name: jellyfin
     # Optional - specify the uid and gid you would like Jellyfin to use instead of root
     # user: uid:gid
-    ports:
-      - 8096:8096/tcp
-      - 7359:7359/udp
+    network_mode: "service:jellyfin-ts" 
+    # ports:
+    #   - 8096:8096/tcp
+    #   - 7359:7359/udp
     volumes:
-      - ${CONFIG_LOCATION}:/config
-      - ${CACHE_LOCATION}:/cache
+      - ${JELLYFIN_CONFIG_LOCATION}:/config
+      - ${JELLYFIN_CACHE_LOCATION}:/cache
       - type: bind
-        source: ${MEDIA_LOCATION}
+        source: ${JELLYFIN_MEDIA_LOCATION}
         target: /media
       # - type: bind
       #   source: /path/to/media2
