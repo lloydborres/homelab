@@ -6,7 +6,7 @@ services:
   jellyfin-tailscale:
       image: tailscale/tailscale:latest
       container_name: jellyfin_tailscale
-      hostname: chocobo-tv
+      hostname: ${TS_HOSTNAME}
       cap_add:
         - NET_ADMIN
         - NET_RAW
