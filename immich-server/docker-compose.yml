@@ -10,21 +10,43 @@
 name: immich
 
 services:
+  immich-tailscale:
+      image: tailscale/tailscale:latest
+      container_name: immich_tailscale
+      hostname: ${TS_HOSTNAME}
+      cap_add:
+        - NET_ADMIN
+        - NET_RAW
+      environment:
+        - TS_AUTHKEY=${TS_AUTHKEY}
+        - TS_EXTRA_ARGS=--advertise-tags=tag:container
+        - TS_STATE_DIR=/var/lib/tailscale
+        - TS_USERSPACE=false
+        - TS_SERVE_CONFIG=/config/tailscale.json
+      volumes:
+        - ${TS_STATE_LOCATION}:/var/lib/tailscale
+        - ./config:/config
+      devices:
+        - /dev/net/tun:/dev/net/tun
+      restart: unless-stopped
+
   immich-server:
     container_name: immich_server
     image: ghcr.io/immich-app/immich-server:${IMMICH_VERSION:-release}
+    network_mode: "service:immich-tailscale" 
     # extends:
     #   file: hwaccel.transcoding.yml
     #   service: cpu # set to one of [nvenc, quicksync, rkmpp, vaapi, vaapi-wsl] for accelerated transcoding
     volumes:
       # Do not edit the next line. If you want to change the media storage location on your system, edit the value of UPLOAD_LOCATION in the .env file
       - ${UPLOAD_LOCATION}:/data
-      - ${EXTERNAL_PHOTOS_LOCATION}:/external_photos:ro
+      # - ${EXTERNAL_PHOTOS_LOCATION_1}:/external_photos_1:ro
+      # - ${EXTERNAL_PHOTOS_LOCATION_2}:/external_photos_2:ro
       - /etc/localtime:/etc/localtime:ro
     env_file:
       - .env
-    ports:
-      - '2283:2283'
+    # ports:
+    #   - '2283:2283'
     depends_on:
       - redis
       - database
