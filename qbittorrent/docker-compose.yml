@@ -1,36 +1,39 @@
 # https://github.com/qbittorrent/docker-qbittorrent-nox
+# https://github.com/qdm12/gluetun
 
 services:
-  qbittorrent-nox:
-    # for debugging
-    # cap_add:
-    # - SYS_PTRACE
-    # additional arguments to `qbittorrent-nox`
-    # command:
-    # - --help
-    container_name: qbittorrent_nox
-    environment:
-      # - PAGID=10000
-      # - PGID=1000
-      # - PUID=1000
-      - QBT_LEGAL_NOTICE=${QBT_LEGAL_NOTICE}
-      - QBT_VERSION=${QBT_VERSION}
-      - QBT_TORRENTING_PORT=${QBT_TORRENTING_PORT}
-      - QBT_WEBUI_PORT=${QBT_WEBUI_PORT}
-      # - TZ=UTC
-      # - UMASK=022
-    image: qbittorrentofficial/qbittorrent-nox:${QBT_VERSION}
+  torrent-gluetun:
+    image: qmcgaw/gluetun
+    container_name: torrent_gluetun
+    cap_add:
+      - NET_ADMIN
+    devices:
+      - /dev/net/tun:/dev/net/tun
     ports:
-      # for bittorrent traffic
-      - ${QBT_TORRENTING_PORT}:${QBT_TORRENTING_PORT}/tcp
-      - ${QBT_TORRENTING_PORT}:${QBT_TORRENTING_PORT}/udp
-      # for WebUI
-      - ${QBT_WEBUI_PORT}:${QBT_WEBUI_PORT}/tcp
-    read_only: true
-    stop_grace_period: 30m
-    tmpfs:
-      - /tmp
-    tty: true
+      - ${QBT_WEBUI_PORT}:${QBT_WEBUI_PORT} # Qbittorent
+    volumes:
+      - ${GT_DATA_PATH}:/gluetun
+    environment:
+      - VPN_SERVICE_PROVIDER=${GT_VPN_PROVIDER}
+      - VPN_TYPE=${GT_VPN_TYPE}
+      # OpenVPN:
+      # - OPENVPN_USER=${GT_OVPN_USER}
+      # - OPENVPN_PASSWORD=${GT_OVPN_PWD}
+      # Wireguard:
+      - WIREGUARD_PRIVATE_KEY=${GT_WG_PVT_KEY}
+      - WIREGUARD_ADDRESSES=${GT_WG_ADDR}
+      - UPDATER_PERIOD=${VPN_UPDATER_PERIOD}
+
+  torrent-qbittorrent:
+    image: lscr.io/linuxserver/qbittorrent:latest
+    container_name: torrent_qbittorrent
+    network_mode: "service:torrent-gluetun"
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=${TZ}
+      - WEBUI_PORT=${QBT_WEBUI_PORT}
     volumes:
       - ${QBT_CONFIG_PATH}:/config
       - ${QBT_DOWNLOADS_PATH}:/downloads
+    restart: unless-stopped
