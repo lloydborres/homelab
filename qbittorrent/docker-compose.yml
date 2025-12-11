@@ -10,6 +10,8 @@ services:
     devices:
       - /dev/net/tun:/dev/net/tun
     ports:
+      - ${QBT_TORRENTING_PORT}:${QBT_TORRENTING_PORT}
+      - ${QBT_TORRENTING_PORT}:${QBT_TORRENTING_PORT}/udp
       - ${QBT_WEBUI_PORT}:${QBT_WEBUI_PORT} # Qbittorent
     volumes:
       - ${GT_DATA_PATH}:/gluetun
