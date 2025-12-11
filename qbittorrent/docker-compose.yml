@@ -18,13 +18,13 @@ services:
     environment:
       - VPN_SERVICE_PROVIDER=${GT_VPN_PROVIDER}
       - VPN_TYPE=${GT_VPN_TYPE}
+      - UPDATER_PERIOD=${VPN_UPDATER_PERIOD}
       # OpenVPN:
-      # - OPENVPN_USER=${GT_OVPN_USER}
-      # - OPENVPN_PASSWORD=${GT_OVPN_PWD}
+      - OPENVPN_USER=${GT_OVPN_USER}
+      - OPENVPN_PASSWORD=${GT_OVPN_PWD}
       # Wireguard:
       - WIREGUARD_PRIVATE_KEY=${GT_WG_PVT_KEY}
       - WIREGUARD_ADDRESSES=${GT_WG_ADDR}
-      - UPDATER_PERIOD=${VPN_UPDATER_PERIOD}
 
   torrent-qbittorrent:
     image: lscr.io/linuxserver/qbittorrent:latest
