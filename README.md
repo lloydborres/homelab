@@ -1,47 +1,35 @@
 # My HomeLab
 
-## Nginx Proxy Manager
+Welcome to my homelab setup.
 
-Site: https://nginxproxymanager.com/guide
+Check out each service's Readme file for instructions.
 
-### Setup
+Most of my containers uses Tailscale as a sidecar allowing me separate them and access anywhere as long as I'm connected to my tailnet. They are configured so I don't have to add the port when accessing them.
 
-1. Navigate to ./nginx-proxy-manager
-2. Run docker compose up -d
-3. Open a browser and navigate to http://127.0.0.1:81
-4. Change the default email and password
+## Docker
 
-#### Default Admin User
+**Official website:** https://www.docker.com
 
-```
-Email:    admin@example.com
-Password: changeme
-```
+### Running services
 
-## Journey Sync Self Hosted
+- [x] [Jellyfin with Tailscale](jellyfin-server/README.md)
+- [x] [Immich with Tailscale](immich-server/README.md)
+- [x] [qBittorrent with Gluetun](qbittorrent/README.md)
 
-Site: https://journey-cloud.github.io/self-hosted-boilerplate/docker-compose-windows
+### Experimenting
 
-## Setup
+- [ ] Journey
+- [ ] Joplin
+- [ ] nginx
 
-1. Run the `docker compose pull`
-2. Run `docker compose up -d`
+### Todo
 
-`docker exec -it journey-sync-ts tailscale serve status`
+- [ ] Vaultwarden
 
-## Joplin Server
+## Tailscale
 
-Sites:
-- https://joplinapp.org
-- https://joplinapp.org/help/apps/joplin_server_business
+Securely connect to anything on the internet with Tailscale. Deploy a WireGuard®-based VPN to achieve point-to-point connectivity that enforces least privilege.
 
-## Setup
+**Official website:** https://tailscale.com
 
-1. Run `docker compose --profile server up -d`
-
-#### Default Admin User
-
-```
-Email:    admin@localhost
-Password: admin
-```
+**Original docker compose:** https://tailscale.com/kb/1282/docker#code-examples
