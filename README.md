@@ -14,7 +14,6 @@ Most of my containers uses Tailscale as a sidecar allowing me separate them and 
 
 - [x] [Jellyfin with Tailscale](jellyfin-server/README.md)
 - [x] [Immich with Tailscale](immich-server/README.md)
-- [x] [qBittorrent with Gluetun](qbittorrent/README.md)
 - [x] [Journey with Tailscale](journey-server/README.md)
 
 ### Experimenting
