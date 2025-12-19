@@ -68,6 +68,7 @@ services:
     volumes:
       - ${RARR_CONFIG_PATH}:/config
       - ${MEDIA_MOVIES_PATH}:/movies #optional
+      - ${MEDIA_ANIME_PATH}:/anime #optional
       - ${QBT_DOWNLOADS_PATH}:/downloads #optional
     restart: unless-stopped
 
@@ -82,5 +83,6 @@ services:
     volumes:
       - ${SARR_CONFIG_PATH}:/config
       - ${MEDIA_SERIES_PATH}:/tv #optional
+      - ${MEDIA_ANIME_PATH}:/anime #optional
       - ${QBT_DOWNLOADS_PATH}:/downloads #optional
     restart: unless-stopped
