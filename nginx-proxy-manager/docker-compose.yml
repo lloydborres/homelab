@@ -1,22 +1,53 @@
 services:
-  app:
-    image: 'jc21/nginx-proxy-manager:latest'
-    container_name: nginx-proxy-manager
+  # nginx-tailscale:
+  #   image: tailscale/tailscale:latest
+  #   container_name: nginx_tailscale
+  #   hostname: ${TS_HOSTNAME}
+  #   cap_add:
+  #     - NET_ADMIN
+  #     - NET_RAW
+  #   environment:
+  #     - TS_AUTHKEY=${TS_AUTHKEY}
+  #     - TS_EXTRA_ARGS=--advertise-tags=tag:container
+  #     - TS_STATE_DIR=/var/lib/tailscale
+  #     - TS_USERSPACE=false
+  #     - TS_SERVE_CONFIG=/config/tailscale.json
+  #   volumes:
+  #     - ./data/tailscale:/var/lib/tailscale
+  #     - ./config:/config
+  #   devices:
+  #     - /dev/net/tun:/dev/net/tun
+  #   restart: unless-stopped
+
+  nginx-cloudflare-tunnel:
+    image: cloudflare/cloudflared:latest
+    container_name: nginx_cloudflare_tunnel
+    command: tunnel run
+    environment:
+      - TUNNEL_TOKEN=${CF_TUNNEL_TOKEN}
+    restart: unless-stopped
+    networks:
+      - proxy-bridge
+
+  nginx-proxy-manager:
+    image: "jc21/nginx-proxy-manager:latest"
+    container_name: nginx_proxy_manager
+    # network_mode: "service:nginx-tailscale"
     restart: unless-stopped
     ports:
-      - '80:80'
-      - '81:81'
-      - '443:443'
+      - "80:80"
+      - "81:81"
+      - "443:443"
     volumes:
-      - ./data:/data
-      - ./letsencrypt:/etc/letsencrypt
+      - ./data/nginx:/data
+      - ./data/nginx/letsencrypt:/etc/letsencrypt
     environment:
-      DB_SQLITE_FILE: "/data/database.sqlite" # Using SQLite instead of MySQL for simplicity
+      # DB_SQLITE_FILE: "./data/nginx/database.sqlite" # Using SQLite instead of MySQL for simplicity
       INITIAL_ADMIN_EMAIL: ${NPM_INITIAL_ADMIN_EMAIL}
       INITIAL_ADMIN_PASSWORD: ${NPM_INITIAL_ADMIN_PASSWORD}
     networks:
-      - npm-bridge
+      - proxy-bridge
 
 networks:
-  npm-bridge:
-    external: true
+  proxy-bridge:
+    name: proxy_bridge
