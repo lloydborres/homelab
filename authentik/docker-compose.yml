@@ -20,7 +20,10 @@ services:
     container_name: authentik_postgresql
     restart: unless-stopped
     volumes:
-      - authentik-database:/var/lib/postgresql/data
+      - database:/var/lib/postgresql/data
+    networks:
+      - proxy-bridge
+
   authentik-server:
     command: server
     depends_on:
@@ -43,6 +46,9 @@ services:
     volumes:
       - ./data/authentik/media:/media
       - ./data/authentik/custom-templates:/templates
+    networks:
+      - proxy-bridge
+
   authentik-worker:
     command: worker
     depends_on:
@@ -65,6 +71,14 @@ services:
       - ./data/authentik/media:/media
       - ./data/authentik/certs:/certs
       - ./data/authentik/custom-templates:/templates
+    networks:
+      - proxy-bridge
+
 volumes:
-  authentik-database:
+  database:
     driver: local
+
+networks:
+  proxy-bridge: # From nginx-proxy-manager
+    name: proxy_bridge
+    external: true
