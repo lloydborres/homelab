@@ -18,6 +18,7 @@ Most of my containers uses Tailscale as a sidecar allowing me separate them and 
 
 ### Experimenting
 
+- [ ] Authentik
 - [ ] Joplin
 - [ ] nginx
 
