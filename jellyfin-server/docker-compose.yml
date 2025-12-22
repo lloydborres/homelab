@@ -4,31 +4,31 @@ name: jellyfin
 
 services:
   jellyfin-tailscale:
-      image: tailscale/tailscale:latest
-      container_name: jellyfin_tailscale
-      hostname: ${TS_HOSTNAME}
-      cap_add:
-        - NET_ADMIN
-        - NET_RAW
-      environment:
-        - TS_AUTHKEY=${TS_AUTHKEY}
-        - TS_EXTRA_ARGS=--advertise-tags=tag:container
-        - TS_STATE_DIR=/var/lib/tailscale
-        - TS_USERSPACE=false
-        - TS_SERVE_CONFIG=/config/tailscale.json
-      volumes:
-        - ${TS_STATE_LOCATION}:/var/lib/tailscale
-        - ./config:/config
-      devices:
-        - /dev/net/tun:/dev/net/tun
-      restart: unless-stopped
+    image: tailscale/tailscale:latest
+    container_name: jellyfin_tailscale
+    hostname: ${TS_HOSTNAME}
+    cap_add:
+      - NET_ADMIN
+      - NET_RAW
+    environment:
+      - TS_AUTHKEY=${TS_AUTHKEY}
+      # - TS_EXTRA_ARGS=--advertise-tags=tag:container # Add tags upon key creation instead
+      - TS_STATE_DIR=/var/lib/tailscale
+      - TS_USERSPACE=false
+      - TS_SERVE_CONFIG=/config/tailscale.json
+    volumes:
+      - ${TS_STATE_LOCATION}:/var/lib/tailscale
+      - ./config:/config
+    devices:
+      - /dev/net/tun:/dev/net/tun
+    restart: unless-stopped
 
   jellyfin-server:
     image: jellyfin/jellyfin
     container_name: jellyfin_server
     # Optional - specify the uid and gid you would like Jellyfin to use instead of root
     # user: uid:gid
-    network_mode: "service:jellyfin-tailscale" 
+    network_mode: "service:jellyfin-tailscale"
     # ports:
     #   - 8096:8096/tcp
     #   - 7359:7359/udp
@@ -47,7 +47,7 @@ services:
       #   source: /path/to/fonts
       #   target: /usr/local/share/fonts/custom
       #   read_only: true
-    restart: 'unless-stopped'
+    restart: "unless-stopped"
     # Optional - alternative address used for autodiscovery
     # environment:
     #   - JELLYFIN_PublishedServerUrl=http://example.com
