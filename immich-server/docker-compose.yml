@@ -11,29 +11,31 @@ name: immich
 
 services:
   immich-tailscale:
-      image: tailscale/tailscale:latest
-      container_name: immich_tailscale
-      hostname: ${TS_HOSTNAME}
-      cap_add:
-        - NET_ADMIN
-        - NET_RAW
-      environment:
-        - TS_AUTHKEY=${TS_AUTHKEY}
-        - TS_EXTRA_ARGS=--advertise-tags=tag:container
-        - TS_STATE_DIR=/var/lib/tailscale
-        - TS_USERSPACE=false
-        - TS_SERVE_CONFIG=/config/tailscale.json
-      volumes:
-        - ${TS_STATE_LOCATION}:/var/lib/tailscale
-        - ./config:/config
-      devices:
-        - /dev/net/tun:/dev/net/tun
-      restart: unless-stopped
+    image: tailscale/tailscale:latest
+    container_name: immich_tailscale
+    hostname: ${TS_HOSTNAME}
+    cap_add:
+      - NET_ADMIN
+      - NET_RAW
+    ports:
+      - 2283:2283
+    environment:
+      - TS_AUTHKEY=${TS_AUTHKEY}
+      # - TS_EXTRA_ARGS=--advertise-tags=tag:container # Add tags upon key creation instead
+      - TS_STATE_DIR=/var/lib/tailscale
+      - TS_USERSPACE=false
+      - TS_SERVE_CONFIG=/config/tailscale.json
+    volumes:
+      - ${TS_STATE_LOCATION}:/var/lib/tailscale
+      - ./config:/config
+    devices:
+      - /dev/net/tun:/dev/net/tun
+    restart: unless-stopped
 
   immich-server:
     container_name: immich_server
     image: ghcr.io/immich-app/immich-server:${IMMICH_VERSION:-release}
-    network_mode: "service:immich-tailscale" 
+    network_mode: "service:immich-tailscale"
     # extends:
     #   file: hwaccel.transcoding.yml
     #   service: cpu # set to one of [nvenc, quicksync, rkmpp, vaapi, vaapi-wsl] for accelerated transcoding
@@ -84,7 +86,7 @@ services:
       POSTGRES_PASSWORD: ${DB_PASSWORD}
       POSTGRES_USER: ${DB_USERNAME}
       POSTGRES_DB: ${DB_DATABASE_NAME}
-      POSTGRES_INITDB_ARGS: '--data-checksums'
+      POSTGRES_INITDB_ARGS: "--data-checksums"
       # Uncomment the DB_STORAGE_TYPE: 'HDD' var if your database isn't stored on SSDs
       # DB_STORAGE_TYPE: 'HDD'
     volumes:
