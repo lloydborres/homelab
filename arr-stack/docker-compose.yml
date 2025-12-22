@@ -30,6 +30,7 @@ services:
       # Wireguard:
       - WIREGUARD_PRIVATE_KEY=${GT_WG_PVT_KEY}
       - WIREGUARD_ADDRESSES=${GT_WG_ADDR}
+    restart: unless-stopped
 
   arr-qbittorrent:
     image: lscr.io/linuxserver/qbittorrent:latest
