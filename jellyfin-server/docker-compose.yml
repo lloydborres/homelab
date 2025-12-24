@@ -29,7 +29,7 @@ services:
     image: jellyfin/jellyfin
     container_name: jellyfin_server
     # Optional - specify the uid and gid you would like Jellyfin to use instead of root
-    user: ${PUID}:${PGID}
+    # user: ${PUID}:${PGID}
     group_add:
       - ${JELLYFIN_GROUP_ADD}
     network_mode: "service:jellyfin-tailscale"
