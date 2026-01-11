@@ -1,0 +1,31 @@
+services:
+  nginx-cloudflare-tunnel:
+    image: cloudflare/cloudflared:latest
+    container_name: nginx_cloudflare_tunnel
+    command: tunnel run
+    environment:
+      - TUNNEL_TOKEN=${CF_TUNNEL_TOKEN}
+    restart: unless-stopped
+    networks:
+      - proxy-bridge
+
+  nginx-proxy-manager:
+    image: "jc21/nginx-proxy-manager:latest"
+    container_name: nginx_proxy_manager
+    restart: unless-stopped
+    ports:
+      - "80:80"
+      - "81:81"
+      - "443:443"
+    volumes:
+      - ${NPM_DATA_LOCATION}:/data
+      - ${NPM_DATA_LOCATION}/letsencrypt:/etc/letsencrypt
+    environment:
+      INITIAL_ADMIN_EMAIL: ${NPM_INITIAL_ADMIN_EMAIL}
+      INITIAL_ADMIN_PASSWORD: ${NPM_INITIAL_ADMIN_PASSWORD}
+    networks:
+      - proxy-bridge
+
+networks:
+  proxy-bridge:
+    name: proxy_bridge
