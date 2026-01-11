@@ -13,10 +13,10 @@ Most of my containers uses Tailscale as a sidecar allowing me separate them and 
 ### Running Services
 
 - [x] [Nginx with Cloudflare Tunnel](/nginx-proxy-manager/)
+- [x] [Authentik with Nginx](/authentik/)
 
 ### Experimenting
 
-- [ ] authentik
 - [ ] Jellyfin
 - [ ] Immich
 - [ ] Pi-hole
