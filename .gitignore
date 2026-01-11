@@ -1,0 +1,9 @@
+# Ignores tracking of .env
+.env
+
+# Ignore tracking of data directories
+data
+
+# Ignore tracking of contents in docker-data but keep the directory
+.docker-data/*
+!.docker-data/.gitkeep
