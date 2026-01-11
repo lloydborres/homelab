@@ -12,20 +12,17 @@ Most of my containers uses Tailscale as a sidecar allowing me separate them and 
 
 ### Running Services
 
-- [ ] In progress
+- [x] [Nginx with Cloudflare Tunnel](/nginx-proxy-manager/)
 
 ### Experimenting
 
-- [ ] In progress
+- [ ] authentik
+- [ ] Jellyfin
+- [ ] Immich
+- [ ] Pi-hole
 
 ### Planned Additions
 
-- [ ] Jellyfin
-- [ ] Immich
-- [ ] Journey
-- [ ] NGINX
-- [ ] authentik
-- [ ] Pi-hole
 - [ ] Navidrome
 - [ ] Vaultwarden
 
