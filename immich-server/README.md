@@ -35,7 +35,7 @@ Running Tailscale as a sidecar isolates the service in its own machine, allowing
 ## Notes
 
 - You don't need to proxy this service since Tailscale is running as a sidecar. If you ever need to proxy, you can update the docker-compose file to expose the Immich port under the Tailscale service or completely remove Tailscale and expose the ports under the Immich service.
-- I recommend enabling the Storage Template feature. This will make your more organized comapred to the default which is difficult to navigate.
+- I recommend enabling the Storage Template feature. This will make your photos/videos more organized using a certain folder structure comapred to the default which is difficult to navigate.
 - All of the data will be stored in [/.docker-data/immich-server](../.docker-data/immich-server) directory if you didn't change the variables pointing here. You can use it for backup and restore.
 
 ## Links

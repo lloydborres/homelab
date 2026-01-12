@@ -32,7 +32,7 @@ Running Tailscale as a sidecar isolates the service in its own machine, allowing
 ## Notes
 
 - You don't need to proxy this service since Tailscale is running as a sidecar. If you ever need to proxy, you can update the docker-compose file to expose the Jellyfin port under the Tailscale service or completely remove Tailscale and expose the ports under the Jellyfin service.
-- All of the data will be stored in [/.docker-data/jellyfin](../.docker-data/jellyfin) directory if you didn't change the variables pointing here. You can use it for backup and restore.
+- All of the data will be stored in [/.docker-data/jellyfin-server](../.docker-data/jellyfin-server) directory if you didn't change the variables pointing here. You can use it for backup and restore.
 
 ## Links
 
