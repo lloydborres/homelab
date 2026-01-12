@@ -20,6 +20,7 @@ Most of my containers uses Tailscale as a sidecar allowing me separate them and 
 ### Experimenting
 
 - [ ] Pi-hole
+- [ ] Containerizing a React Application
 
 ### Planned Additions
 
