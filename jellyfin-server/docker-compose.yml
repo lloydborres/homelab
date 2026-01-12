@@ -1,0 +1,62 @@
+# https://jellyfin.org/docs/general/installation/container/
+
+name: jellyfin
+
+services:
+  jellyfin-tailscale:
+    image: tailscale/tailscale:latest
+    container_name: jellyfin_tailscale
+    hostname: ${TS_HOSTNAME}
+    cap_add:
+      - NET_ADMIN
+      - NET_RAW
+    ports:
+      - 8096:8096
+    environment:
+      - TS_AUTHKEY=${TS_AUTHKEY}
+      - TS_EXTRA_ARGS=--advertise-tags=tag:container
+      - TS_STATE_DIR=/var/lib/tailscale
+      - TS_USERSPACE=false
+      - TS_SERVE_CONFIG=/config/tailscale.json
+    volumes:
+      - ${TS_STATE_LOCATION}:/var/lib/tailscale
+      - ./config:/config
+    devices:
+      - /dev/net/tun:/dev/net/tun
+    restart: unless-stopped
+
+  jellyfin-server:
+    image: jellyfin/jellyfin
+    container_name: jellyfin_server
+    # Optional - specify the uid and gid you would like Jellyfin to use instead of root
+    # user: ${PUID}:${PGID}
+    group_add:
+      - ${JELLYFIN_GROUP_ADD}
+    network_mode: "service:jellyfin-tailscale"
+    # ports:
+    #   - 8096:8096/tcp
+    #   - 7359:7359/udp
+    volumes:
+      - ${JELLYFIN_CONFIG_LOCATION}:/config
+      - ${JELLYFIN_CACHE_LOCATION}:/cache
+      - type: bind
+        source: ${JELLYFIN_MEDIA_LOCATION}
+        target: /media
+      # - type: bind
+      #   source: /path/to/media2
+      #   target: /media2
+      #   read_only: true
+      # Optional - extra fonts to be used during transcoding with subtitle burn-in
+      # - type: bind
+      #   source: /path/to/fonts
+      #   target: /usr/local/share/fonts/custom
+      #   read_only: true
+    restart: "unless-stopped"
+    # Optional - alternative address used for autodiscovery
+    # environment:
+    #   - JELLYFIN_PublishedServerUrl=http://example.com
+    # Optional - may be necessary for docker healthcheck to pass if running in host network mode
+    # extra_hosts:
+    #   - 'host.docker.internal:host-gateway'
+    devices:
+      - /dev/dri/renderD128:/dev/dri/renderD128

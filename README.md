@@ -14,10 +14,10 @@ Most of my containers uses Tailscale as a sidecar allowing me separate them and 
 
 - [x] [Nginx with Cloudflare Tunnel](/nginx-proxy-manager/)
 - [x] [Authentik with Nginx](/authentik/)
+- [x] [Jellyfin with Tailscale](/jellyfin-server/)
 
 ### Experimenting
 
-- [ ] Jellyfin
 - [ ] Immich
 - [ ] Pi-hole
 
@@ -33,3 +33,5 @@ Tailscale is a mesh VPN service that connects devices and services securely acro
 **Official website:** https://tailscale.com
 
 **Original docker compose:** https://tailscale.com/kb/1282/docker#code-examples
+
+> You can sign up to Tailscale using the available providers. If you choose to sign up with OIDC you self-host [Authentik](/authentik/README.md#integrating-authentik-with-tailscale-via-oidc).
