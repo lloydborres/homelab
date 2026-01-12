@@ -1,0 +1,35 @@
+services:
+  pihole-tailscale:
+    image: tailscale/tailscale:latest
+    container_name: pihole_tailscale
+    hostname: ${TS_HOSTNAME}
+    cap_add:
+      - NET_ADMIN
+      - NET_RAW
+    environment:
+      - TS_AUTHKEY=${TS_AUTHKEY}
+      - TS_STATE_DIR=/var/lib/tailscale
+      - TS_USERSPACE=false
+      - TS_SERVE_CONFIG=/config/tailscale.json
+    volumes:
+      - ${TS_STATE_LOCATION}:/var/lib/tailscale
+      - ./config:/config
+    devices:
+      - /dev/net/tun:/dev/net/tun
+    restart: unless-stopped
+
+  pihole-server:
+    container_name: pihole_server
+    image: pihole/pihole:latest
+    network_mode: "service:pihole-tailscale"
+    environment:
+      TZ: ${TZ}
+      FTLCONF_webserver_api_password: ${PIHOLE_API_PASSWORD}
+      FTLCONF_dns_listeningMode: "ALL"
+    volumes:
+      - ${PIHOLE_CONFIG_LOCATION}:/etc/pihole
+    cap_add:
+      - NET_ADMIN
+      - SYS_TIME
+      - SYS_NICE
+    restart: unless-stopped
