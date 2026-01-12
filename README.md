@@ -15,10 +15,10 @@ Most of my containers uses Tailscale as a sidecar allowing me separate them and 
 - [x] [Nginx with Cloudflare Tunnel](/nginx-proxy-manager/)
 - [x] [Authentik with Nginx](/authentik/)
 - [x] [Jellyfin with Tailscale](/jellyfin-server/)
+- [x] [Immich with Tailscale](/immich-server/)
 
 ### Experimenting
 
-- [ ] Immich
 - [ ] Pi-hole
 
 ### Planned Additions
