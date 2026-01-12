@@ -34,4 +34,4 @@ Tailscale is a mesh VPN service that connects devices and services securely acro
 
 **Original docker compose:** https://tailscale.com/kb/1282/docker#code-examples
 
-> You can sign up to Tailscale using the available providers. If you choose to sign up with OIDC you can self-host [Authentik](/authentik/README.md#integrating-authentik-with-tailscale-via-oidc).
+> You can sign up to Tailscale using the available providers. If you choose to sign up with OIDC you can self-host [Authentik](/authentik/README.md#integrating-authentik-with-tailscale-via-oidc). You'll need to buy a domain for this to work.

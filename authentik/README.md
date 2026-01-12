@@ -35,6 +35,7 @@ Authentik is used to authenticate access to my Tailscale account. The service is
 ## Notes
 
 - This service requires [Nginx](/nginx-proxy-manager/) to be running before it is started.
+- You'll need to buy a domain name to use Tailscale with Authentik.
 - If you didn't change the `_LOCATION` variable, all of your data will be stored in [/.docker-data/authentik](../.docker-data/authentik) directory. You can use it for backup and restore.
 
 ## Links

@@ -11,7 +11,7 @@ yourdomain.com -> Cloudflare Tunnel -> Nginx -> App 1 (localhost:5173)
 
 With this setup, you can set `app1.yourdomain.com` to point to `:5173` and `app2.yourdomain.com` to `:3001`.
 
-## Setup
+## Nginx Initial Setup
 
 1. Open a terminal and navigate to this [directory](/nginx-proxy-manager/).
 2. Create an `.env` file based from [.env.example](.env.example).
