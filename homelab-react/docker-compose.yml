@@ -1,0 +1,12 @@
+services:
+  homelab-react:
+    image: homelab-react
+    container_name: homelab_server
+    build:
+      context: .
+      dockerfile: ./Dockerfile
+    environment:
+      NODE_ENV: production
+    ports:
+      - 3031:3000
+    restart: unless-stopped
