@@ -20,11 +20,11 @@ Most of my containers uses Tailscale as a sidecar allowing me separate them and 
 ### Experimenting
 
 - [ ] Pi-hole
+- [ ] Vaultwarden
 
 ### Planned Additions
 
 - [ ] Navidrome
-- [ ] Vaultwarden
 
 ## Tailscale
 
