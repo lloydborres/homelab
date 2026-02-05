@@ -18,6 +18,9 @@ The service is reverse-proxied through Nginx while Tailscale is installed in the
    - Scheme: `http`
    - Forward Hostname/IP: `vaultwarden-server`
    - Forward Port: `80`
+   - Block Common Exploits: `enabled`
+   - Websockets Support: `enabled`
+   - Under SSL tab, set an SSL Certificate and `enable` Force SSL.
 7. In your domain DNS records, make sure to create an `A` record pointing to your Tailscale server machine IP address that is running Nginx.
 8. You can now visit your domain and create your account from there.
 
