@@ -1,0 +1,16 @@
+services:
+  vaultwarden-server:
+    image: vaultwarden/server:latest
+    container_name: vaultwarden_server
+    restart: unless-stopped
+    environment:
+      DOMAIN: ${VW_DOMAIN}
+    volumes:
+      - ${VW_DATA_LOCATION}:/data/
+    networks:
+      - proxy-bridge
+
+networks:
+  proxy-bridge: # From nginx-proxy-manager
+    name: proxy_bridge
+    external: true
