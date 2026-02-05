@@ -16,11 +16,11 @@ Most of my containers uses Tailscale as a sidecar allowing me separate them and 
 - [x] [Authentik with Nginx](/authentik/)
 - [x] [Jellyfin with Tailscale](/jellyfin-server/)
 - [x] [Immich with Tailscale](/immich-server/)
+- [x] [Vaultwarden with Tailscale and Nginx](/vaultwarden-server/)
 
 ### Experimenting
 
 - [ ] Pi-hole
-- [ ] Vaultwarden
 
 ### Planned Additions
 
