@@ -15,14 +15,7 @@ Running Tailscale as a sidecar isolates the service in its own machine, allowing
 2. Create an `.env` file based from [.env.example](.env.example).
 3. Update the following variables in your recently created `.env` file:
    - `TS_HOSTNAME` - Sets a hostname for your machine in Tailscale. e.g. setting this to `immich` you'll be able to access the web app through `immich.xxx.ts.net`.
-   - `TS_AUTHKEY` - Generate an Auth key under [Tailscale Admin Console Settings](https://login.tailscale.com/admin/settings/keys). A Tag must be applied. If you don't have a tag created yet, create one under [Access controls](https://login.tailscale.com/admin/acls/file).
-     ```
-     # Sample Code
-     "tagOwners": {
-        "tag:my-server":            ["admin@domain.com"],
-        "tag:docker-container":         ["admin@domain.com"],
-     },
-     ```
+   - `TS_AUTHKEY` - Generate an Auth key under [Tailscale Admin Console Settings](https://login.tailscale.com/admin/settings/keys). A Tag must be applied. If you don't have a tag created yet, please see [Creating a Tag in Tailscale](../README.md#creating-a-tag-in-tailscale).
    - `IMMICH_DATA_LOCATION` - This is where your photos/videos go to when uploaded. It will also contain other files so please select a dedicated folder. If you want to separate other data, you can comment out the other `_LOCATION` to separate them.
    - `IMMICH_EXTERNAL_PHOTOS_LOCATION_1` - Use this if you want to import existing photos/videos so you don't have to upload them. You can add more of these when necessary.
    - `TZ` - Set your preferred Timezone
@@ -34,7 +27,6 @@ Running Tailscale as a sidecar isolates the service in its own machine, allowing
 
 ## Notes
 
-- You don't need to proxy this service since Tailscale is running as a sidecar. If you ever need to proxy, you can update the docker-compose file to expose the Immich port under the Tailscale service or completely remove Tailscale and expose the ports under the Immich service.
 - I recommend enabling the Storage Template feature. This will make your photos/videos more organized using a certain folder structure comapred to the default which is difficult to navigate.
 - All of the data will be stored in [/.docker-data/immich-server](../.docker-data/immich-server) directory if you didn't change the variables pointing here. You can use it for backup and restore.
 

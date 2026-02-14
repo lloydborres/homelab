@@ -1,4 +1,4 @@
-# My HomeLab
+# My HomeLab V1
 
 Welcome to my homelab setup.
 
@@ -12,19 +12,10 @@ Most of my containers uses Tailscale as a sidecar allowing me separate them and 
 
 ### Running Services
 
-- [x] [Nginx with Cloudflare Tunnel](/nginx-proxy-manager/)
-- [x] [Authentik with Nginx](/authentik/)
 - [x] [Jellyfin with Tailscale](/jellyfin-server/)
 - [x] [Immich with Tailscale](/immich-server/)
-- [x] [Vaultwarden with Tailscale and Nginx](/vaultwarden-server/)
-
-### Experimenting
-
-- [ ] Pi-hole
-
-### Planned Additions
-
-- [ ] Navidrome
+- [x] [Vaultwarden with Tailscale](/vaultwarden-server/)
+- [x] [Pi-hole with Tailscale](/pihole/)
 
 ## Tailscale
 
@@ -34,4 +25,14 @@ Tailscale is a mesh VPN service that connects devices and services securely acro
 
 **Original docker compose:** https://tailscale.com/kb/1282/docker#code-examples
 
-> You can sign up to Tailscale using the available providers. If you choose to sign up with OIDC you can self-host [Authentik](/authentik/README.md#integrating-authentik-with-tailscale-via-oidc). You'll need to buy a domain for this to work.
+### Creating a Tag in Tailscale
+
+Under [Access controls](https://login.tailscale.com/admin/acls/file), add the following:
+
+```
+# Sample Code
+"tagOwners": {
+   "tag:my-server":            ["admin@domain.com"],
+   "tag:docker-container":         ["admin@domain.com"],
+},
+```

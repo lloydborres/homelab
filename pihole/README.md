@@ -12,14 +12,7 @@ Running Tailscale as a sidecar isolates the service in its own machine, allowing
 2. Create an `.env` file based from [.env.example](.env.example).
 3. Update the following variables in your recently created `.env` file:
    - `TS_HOSTNAME` - Sets a hostname for your machine in Tailscale. e.g. setting this to `pihole` you'll be able to access the web app through `pihole.xxx.ts.net`.
-   - `TS_AUTHKEY` - Generate an Auth key under [Tailscale Admin Console Settings](https://login.tailscale.com/admin/settings/keys). A Tag must be applied. If you don't have a tag created yet, create one under [Access controls](https://login.tailscale.com/admin/acls/file).
-     ```
-     # Sample Code
-     "tagOwners": {
-        "tag:my-server":            ["admin@domain.com"],
-        "tag:docker-container":         ["admin@domain.com"],
-     },
-     ```
+   - `TS_AUTHKEY` - Generate an Auth key under [Tailscale Admin Console Settings](https://login.tailscale.com/admin/settings/keys). A Tag must be applied. If you don't have a tag created yet, please see [Creating a Tag in Tailscale](../README.md#creating-a-tag-in-tailscale).
 4. Run `docker compose up -d`.
 5. Approve the machine in your Tailscale Admin Console. You may skip this if you turned of Device Approvals.
 6. In your terminal, set a password for your dashboard by running
