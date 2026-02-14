@@ -24,7 +24,6 @@ services:
     network_mode: "service:pihole-tailscale"
     environment:
       TZ: ${TZ}
-      FTLCONF_webserver_api_password: ${PIHOLE_API_PASSWORD}
       FTLCONF_dns_listeningMode: "ALL"
     volumes:
       - ${PIHOLE_CONFIG_LOCATION}:/etc/pihole
