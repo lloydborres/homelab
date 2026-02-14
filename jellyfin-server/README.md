@@ -12,14 +12,7 @@ Running Tailscale as a sidecar isolates the service in its own machine, allowing
 2. Create an `.env` file based from [.env.example](.env.example).
 3. Update the following variables in your recently created `.env` file:
    - `TS_HOSTNAME` - Sets a hostname for your machine in Tailscale. e.g. setting this to `jellyfin` you'll be able to access the web app through `jellyfin.xxx.ts.net`.
-   - `TS_AUTHKEY` - Generate an Auth key under [Tailscale Admin Console Settings](https://login.tailscale.com/admin/settings/keys). A Tag must be applied. If you don't have a tag created yet, create one under [Access controls](https://login.tailscale.com/admin/acls/file).
-     ```
-     # Sample Code
-     "tagOwners": {
-        "tag:my-server":            ["admin@domain.com"],
-        "tag:docker-container":         ["admin@domain.com"],
-     },
-     ```
+   - `TS_AUTHKEY` - Generate an Auth key under [Tailscale Admin Console Settings](https://login.tailscale.com/admin/settings/keys). A Tag must be applied. If you don't have a tag created yet, please see [Creating a Tag in Tailscale](../README.md#creating-a-tag-in-tailscale).
    - `JELLYFIN_MEDIA_LOCATION` - Point this to the folder containing the movies/series.
    - `JELLYFIN_GROUP_ADD=122` - This is for hardware acceleration. Check this [doc](https://jellyfin.org/docs/general/post-install/transcoding/hardware-acceleration) for more info.
    - `PUID` - Enter `id` in the terminal to get ids.
@@ -31,7 +24,6 @@ Running Tailscale as a sidecar isolates the service in its own machine, allowing
 
 ## Notes
 
-- You don't need to proxy this service since Tailscale is running as a sidecar. If you ever need to proxy, you can update the docker-compose file to expose the Jellyfin port under the Tailscale service or completely remove Tailscale and expose the ports under the Jellyfin service.
 - All of the data will be stored in [/.docker-data/jellyfin-server](../.docker-data/jellyfin-server) directory if you didn't change the variables pointing here. You can use it for backup and restore.
 
 ## Links
