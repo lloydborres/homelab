@@ -1,4 +1,25 @@
 services:
+  nginx-tailscale:
+    image: tailscale/tailscale:latest
+    container_name: nginx_tailscale
+    hostname: ${TS_HOSTNAME}
+    cap_add:
+      - NET_ADMIN
+      - NET_RAW
+    environment:
+      - TS_AUTHKEY=${TS_AUTHKEY}
+      - TS_STATE_DIR=/var/lib/tailscale
+      - TS_USERSPACE=false
+      - TS_SERVE_CONFIG=/config/tailscale.json
+    volumes:
+      - ${TS_STATE_LOCATION}:/var/lib/tailscale
+      - ./config:/config
+    devices:
+      - /dev/net/tun:/dev/net/tun
+    restart: unless-stopped
+    networks:
+      - proxy-bridge
+
   nginx-cloudflare-tunnel:
     image: cloudflare/cloudflared:latest
     container_name: nginx_cloudflare_tunnel
@@ -13,10 +34,6 @@ services:
     image: "jc21/nginx-proxy-manager:latest"
     container_name: nginx_proxy_manager
     restart: unless-stopped
-    ports:
-      - "80:80"
-      - "81:81"
-      - "443:443"
     volumes:
       - ${NPM_DATA_LOCATION}:/data
       - ${NPM_DATA_LOCATION}/letsencrypt:/etc/letsencrypt
@@ -29,3 +46,4 @@ services:
 networks:
   proxy-bridge:
     name: proxy_bridge
+    driver: bridge

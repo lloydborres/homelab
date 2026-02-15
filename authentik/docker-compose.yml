@@ -20,7 +20,7 @@ services:
     volumes:
       - ${AUTHENTIK_DB_LOCATION}:/var/lib/postgresql/data
     networks:
-      - proxy-bridge
+      - authentik-network
 
   authentik-server:
     command: server
@@ -37,14 +37,12 @@ services:
       AUTHENTIK_SECRET_KEY: ${AUTHENTIK_SECRET_KEY:?secret key required}
     image: ${AUTHENTIK_IMAGE:-ghcr.io/goauthentik/server}:${AUTHENTIK_TAG:-2025.10.3}
     container_name: authentik_server
-    ports:
-      - ${COMPOSE_PORT_HTTP:-9000}:9000
-      - ${COMPOSE_PORT_HTTPS:-9443}:9443
     restart: unless-stopped
     volumes:
       - ${AUTHENTIK_MEDIA_LOCATION}:/media
       - ${AUTHENTIK_TEMPLATES_LOCATION}:/templates
     networks:
+      - authentik-network
       - proxy-bridge
 
   authentik-worker:
@@ -70,9 +68,12 @@ services:
       - ${AUTHENTIK_CERTS_LOCATION}:/certs
       - ${AUTHENTIK_TEMPLATES_LOCATION}:/templates
     networks:
-      - proxy-bridge
+      - authentik-network
 
 networks:
+  authentik-network:
+    name: authentik_default
+
   proxy-bridge: # From nginx-proxy-manager
     name: proxy_bridge
     external: true
