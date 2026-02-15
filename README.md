@@ -2,7 +2,7 @@
 
 Welcome to my HomeLab setup.
 
-<img src="./docs/images/homelab_diagram.svg" alt="v2 HomeLab Diagram" width="100%"/>
+<img src="./docs/images/homelab_diagram.webp" alt="v2 HomeLab Diagram" width="100%"/>
 
 <p align="center">
 <sub><em>v2 HomeLab Diagram</em></sub>
