@@ -1,0 +1,22 @@
+{
+  "TCP": {
+    "81": {
+      "HTTPS": true
+    },
+    "443": {
+      "TCPForward": "nginx-proxy-manager:443"
+    }
+  },
+  "Web": {
+    "${TS_CERT_DOMAIN}:81": {
+      "Handlers": {
+        "/": {
+          "Proxy": "http://nginx-proxy-manager:81"
+        }
+      }
+    }
+  },
+  "AllowFunnel": {
+    "${TS_CERT_DOMAIN}:81": false
+  }
+}

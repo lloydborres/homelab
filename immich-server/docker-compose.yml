@@ -1,30 +1,7 @@
 services:
-  immich-tailscale:
-    image: tailscale/tailscale:latest
-    container_name: immich_tailscale
-    hostname: ${TS_HOSTNAME}
-    cap_add:
-      - NET_ADMIN
-      - NET_RAW
-    ports:
-      - 2283:2283
-    environment:
-      - TS_AUTHKEY=${TS_AUTHKEY}
-      - TS_EXTRA_ARGS=--advertise-tags=tag:container
-      - TS_STATE_DIR=/var/lib/tailscale
-      - TS_USERSPACE=false
-      - TS_SERVE_CONFIG=/config/tailscale.json
-    volumes:
-      - ${TS_STATE_LOCATION}:/var/lib/tailscale
-      - ./config:/config
-    devices:
-      - /dev/net/tun:/dev/net/tun
-    restart: unless-stopped
-
   immich-server:
     container_name: immich_server
     image: ghcr.io/immich-app/immich-server:${IMMICH_VERSION:-release}
-    network_mode: "service:immich-tailscale"
     volumes:
       - ${IMMICH_DATA_LOCATION}:/data
       # - ${IMMICH_BACKUPS_LOCATION}:/data/backups
@@ -43,6 +20,9 @@ services:
     restart: always
     healthcheck:
       disable: false
+    networks:
+      - immich-network
+      - proxy-bridge
 
   immich-machine-learning:
     container_name: immich_machine_learning
@@ -54,6 +34,8 @@ services:
     restart: always
     healthcheck:
       disable: false
+    networks:
+      - immich-network
 
   redis:
     container_name: immich_redis
@@ -61,6 +43,8 @@ services:
     healthcheck:
       test: redis-cli ping || exit 1
     restart: always
+    networks:
+      - immich-network
 
   database:
     container_name: immich_postgres
@@ -74,6 +58,16 @@ services:
       - ${DB_DATA_LOCATION}:/var/lib/postgresql/data
     shm_size: 128mb
     restart: always
+    networks:
+      - immich-network
 
 volumes:
   model-cache:
+
+networks:
+  immich-network:
+    name: immich_default
+
+  proxy-bridge: # From nginx-proxy-manager
+    name: proxy_bridge
+    external: true
