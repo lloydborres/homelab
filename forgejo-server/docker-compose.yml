@@ -1,0 +1,50 @@
+services:
+  forgejo-tailscale:
+    image: tailscale/tailscale:latest
+    container_name: forgejo_tailscale
+    hostname: ${TS_HOSTNAME}
+    cap_add:
+      - NET_ADMIN
+      - NET_RAW
+    environment:
+      - TS_AUTHKEY=${TS_AUTHKEY}
+      - TS_STATE_DIR=/var/lib/tailscale
+      - TS_USERSPACE=false
+      - TS_SERVE_CONFIG=/config/tailscale.json
+    volumes:
+      - ${TS_STATE_LOCATION}:/var/lib/tailscale
+      - ./config:/config
+    devices:
+      - /dev/net/tun:/dev/net/tun
+    restart: unless-stopped
+
+  forgejo-server:
+    image: codeberg.org/forgejo/forgejo:13
+    container_name: forgejo_server
+    network_mode: "service:forgejo-tailscale"
+    environment:
+      - USER_UID=${PUID}
+      - USER_GID=${PGID}
+      - FORGEJO__database__DB_TYPE=mysql
+      - FORGEJO__database__HOST=forgejo-db:3306
+      - FORGEJO__database__NAME=${FORGEJO_MYSQL_DATABASE}
+      - FORGEJO__database__USER=${FORGEJO_MYSQL_USER}
+      - FORGEJO__database__PASSWD=${FORGEJO_MYSQL_PASSWORD}
+    restart: always
+    volumes:
+      - ${FORGEJO_DATA_LOCATION}:/data
+      - /etc/localtime:/etc/localtime:ro
+    depends_on:
+      - forgejo-db
+
+  forgejo-db:
+    image: mysql:8
+    container_name: forgejo_db
+    restart: always
+    environment:
+      - MYSQL_ROOT_PASSWORD=${FORGEJO_MYSQL_ROOT_PASSWORD}
+      - MYSQL_USER=${FORGEJO_MYSQL_USER}
+      - MYSQL_PASSWORD=${FORGEJO_MYSQL_PASSWORD}
+      - MYSQL_DATABASE=${FORGEJO_MYSQL_DATABASE}
+    volumes:
+      - ${FORGEJO_DB_LOCATION}:/var/lib/mysql
