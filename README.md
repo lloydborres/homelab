@@ -46,6 +46,7 @@ Setup Overview:
 ### Experimenting
 
 - [ ] Pi-hole
+- [ ] Forgejo
 
 ### Planned Additions
 
