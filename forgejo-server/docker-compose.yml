@@ -1,27 +1,7 @@
 services:
-  forgejo-tailscale:
-    image: tailscale/tailscale:latest
-    container_name: forgejo_tailscale
-    hostname: ${TS_HOSTNAME}
-    cap_add:
-      - NET_ADMIN
-      - NET_RAW
-    environment:
-      - TS_AUTHKEY=${TS_AUTHKEY}
-      - TS_STATE_DIR=/var/lib/tailscale
-      - TS_USERSPACE=false
-      - TS_SERVE_CONFIG=/config/tailscale.json
-    volumes:
-      - ${TS_STATE_LOCATION}:/var/lib/tailscale
-      - ./config:/config
-    devices:
-      - /dev/net/tun:/dev/net/tun
-    restart: unless-stopped
-
   forgejo-server:
     image: codeberg.org/forgejo/forgejo:13
     container_name: forgejo_server
-    network_mode: "service:forgejo-tailscale"
     environment:
       - USER_UID=${PUID}
       - USER_GID=${PGID}
@@ -31,6 +11,9 @@ services:
       - FORGEJO__database__USER=${FORGEJO_MYSQL_USER}
       - FORGEJO__database__PASSWD=${FORGEJO_MYSQL_PASSWORD}
     restart: always
+    networks:
+      - forgejo-network
+      - proxy-bridge
     volumes:
       - ${FORGEJO_DATA_LOCATION}:/data
       - /etc/localtime:/etc/localtime:ro
@@ -46,5 +29,16 @@ services:
       - MYSQL_USER=${FORGEJO_MYSQL_USER}
       - MYSQL_PASSWORD=${FORGEJO_MYSQL_PASSWORD}
       - MYSQL_DATABASE=${FORGEJO_MYSQL_DATABASE}
+    networks:
+      - forgejo-network
     volumes:
       - ${FORGEJO_DB_LOCATION}:/var/lib/mysql
+
+networks:
+  forgejo-network:
+    name: forgejo_default
+    external: false
+
+  proxy-bridge: # From nginx-proxy-manager
+    name: proxy_bridge
+    external: true
