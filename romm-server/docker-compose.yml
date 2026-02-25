@@ -1,0 +1,70 @@
+volumes:
+  mysql_data:
+  romm_resources:
+  romm_redis_data:
+
+services:
+  romm-tailscale:
+    image: tailscale/tailscale:latest
+    container_name: romm_tailscale
+    restart: unless-stopped
+    hostname: ${TS_HOSTNAME}
+    cap_add:
+      - NET_ADMIN
+      - NET_RAW
+    devices:
+      - /dev/net/tun:/dev/net/tun
+    environment:
+      - TS_AUTHKEY=${TS_AUTHKEY}
+      - TS_STATE_DIR=/var/lib/tailscale
+      - TS_USERSPACE=false
+      - TS_SERVE_CONFIG=/config/tailscale.json
+    volumes:
+      - ${TS_STATE_LOCATION}:/var/lib/tailscale
+      - ./config:/config
+
+  romm-server:
+    image: rommapp/romm:latest
+    container_name: romm_server
+    restart: unless-stopped
+    depends_on:
+      romm-db:
+        condition: service_healthy
+        restart: true
+    environment:
+      - DB_HOST=romm-db
+      - DB_NAME=${DB_DATABASE}
+      - DB_USER=${DB_USER}
+      - DB_PASSWD=${DB_PASSWORD}
+      - ROMM_AUTH_SECRET_KEY=${ROMM_AUTH_SECRET_KEY}
+      - SCREENSCRAPER_USER=${ROMM_SCREENSCRAPER_USER}
+      - SCREENSCRAPER_PASSWORD=${ROMM_SCREENSCRAPER_PASSWORD}
+      - RETROACHIEVEMENTS_API_KEY=${ROMM_RETROACHIEVEMENTS_API_KEY}
+      - STEAMGRIDDB_API_KEY=${ROMM_STEAMGRIDDB_API_KEY}
+      - HASHEOUS_API_ENABLED=true${ROMM_HASHEOUS_API_ENABLED}
+    volumes:
+      - ${ROMM_RESOURCES_LOCATION}:/romm/resources
+      - ${ROMM_REDIS_DATA_LOCATION}:/redis-data
+      - ${ROMM_LIBRARY_LOCATION}:/romm/library
+      - ${ROMM_ASSETS_LOCATION}:/romm/assets
+      - ${ROMM_CONFIG_LOCATION}:/romm/config
+    network_mode: "service:romm-tailscale"
+
+  romm-db:
+    image: mariadb:latest
+    container_name: romm_db
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "healthcheck.sh", "--connect", "--innodb_initialized"]
+      start_period: 30s
+      start_interval: 10s
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    environment:
+      - MARIADB_ROOT_PASSWORD=${DB_ROOT_PASSWORD}
+      - MARIADB_DATABASE=${DB_DATABASE}
+      - MARIADB_USER=${DB_USER}
+      - MARIADB_PASSWORD=${DB_PASSWORD}
+    volumes:
+      - ${DB_LOCATION}:/var/lib/mysql
