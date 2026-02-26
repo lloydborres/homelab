@@ -1,8 +1,3 @@
-volumes:
-  mysql_data:
-  romm_resources:
-  romm_redis_data:
-
 services:
   romm-tailscale:
     image: tailscale/tailscale:latest
@@ -41,7 +36,7 @@ services:
       - SCREENSCRAPER_PASSWORD=${ROMM_SCREENSCRAPER_PASSWORD}
       - RETROACHIEVEMENTS_API_KEY=${ROMM_RETROACHIEVEMENTS_API_KEY}
       - STEAMGRIDDB_API_KEY=${ROMM_STEAMGRIDDB_API_KEY}
-      - HASHEOUS_API_ENABLED=true${ROMM_HASHEOUS_API_ENABLED}
+      - HASHEOUS_API_ENABLED=${ROMM_HASHEOUS_API_ENABLED}
     volumes:
       - ${ROMM_RESOURCES_LOCATION}:/romm/resources
       - ${ROMM_REDIS_DATA_LOCATION}:/redis-data
