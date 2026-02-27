@@ -1,14 +1,12 @@
 # My HomeLab
 
-Welcome to my HomeLab setup.
-
 <img src="./.docs/images/homelab_diagram.webp" alt="v2 HomeLab Diagram" width="100%"/>
 
 <p align="center">
 <sub><em>v2 HomeLab Diagram</em></sub>
 </p>
 
-Setup Overview:
+## Setup Overview:
 
 - A Linux machine as a server with Docker installed.
 - Admin can manage the server through SSH from another machine.
@@ -21,6 +19,8 @@ Setup Overview:
   - All traffic will route through Nginx.
     - The root domain that comes from Cloudflare Tunnel will be forwarded to authentik.
     - The sub domains that are pointing to the Tailscale IP will be forwarded to their respective services.
+- Tailscale sidecar for Pi-hole.
+  - Isolate Pi-hole to it's own machine so we can set our Tailscale DNS nameservers to point to the Pi-hole container.
 
 ## Version Notes
 
@@ -37,27 +37,35 @@ Setup Overview:
 
 ### Running Services
 
-- [x] [Nginx with Cloudflare Tunnel](/nginx-proxy-manager/)
-- [x] [Authentik with Nginx](/authentik/)
-- [x] [Jellyfin with Tailscale](/jellyfin-server/)
-- [x] [Immich with Tailscale](/immich-server/)
-- [x] [Vaultwarden with Tailscale and Nginx](/vaultwarden-server/)
+- [x] [**Nginx Proxy Manager** with **Tailscale** and **Cloudflare Tunnel**](/nginx-proxy-manager/)
+  - A reverse proxy
+- [x] [**Authentik**](/authentik/)
+  - An IdP (Identity Provider) and SSO (Single Sign On) platform
+- [x] [**Jellyfin**](/jellyfin-server/)
+  - A media server
+- [x] [**Immich**](/immich-server/)
+  - A photo and video management solution
+- [x] [**Vaultwarden**](/vaultwarden-server/)
+  - A password manager, alternate implementation of Bitwarden
+- [x] [**Pi-hole** with Tailscale](/pihole/)
+  - A DNS/Ad blocker
+- [x] [**Forgejo**](/forgejo-server/)
+  - A Git Repository
+- [x] [**Navidrome**](/navidrome-server/)
+  - A music server
+- [x] [**RomM**](/romm-server/)
+  - A ROM Manager with emulator
 
 ### Experimenting
 
-- [ ] Pi-hole
-- [ ] Forgejo
+- [ ] Containerizing a React Application
 
 ### Planned Additions
 
-- [ ] Navidrome
+- [ ] Joplin
+- [ ] Headscale (?)
 
-## Tailscale
+## Setup Guide
 
-Tailscale is a mesh VPN service that connects devices and services securely across different networks using WireGuard protocol.
-
-**Official website:** https://tailscale.com
-
-**Original docker compose:** https://tailscale.com/kb/1282/docker#code-examples
-
-> You can sign up to Tailscale using the available providers. If you choose to sign up with OIDC you can self-host [Authentik](/authentik/README.md#integrating-authentik-with-tailscale-via-oidc).
+1. [Setup Server](./.docs/1%20Setup%20Server.md)
+2. [Setup Reverse Proxy](./.docs/2%20Setup%20Reverse%20Proxy.md)
