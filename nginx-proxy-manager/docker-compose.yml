@@ -2,10 +2,13 @@ services:
   nginx-tailscale:
     image: tailscale/tailscale:latest
     container_name: nginx_tailscale
+    restart: unless-stopped
     hostname: ${TS_HOSTNAME}
     cap_add:
       - NET_ADMIN
       - NET_RAW
+    devices:
+      - /dev/net/tun:/dev/net/tun
     environment:
       - TS_AUTHKEY=${TS_AUTHKEY}
       - TS_STATE_DIR=/var/lib/tailscale
@@ -14,19 +17,16 @@ services:
     volumes:
       - ${TS_STATE_LOCATION}:/var/lib/tailscale
       - ./config:/config
-    devices:
-      - /dev/net/tun:/dev/net/tun
-    restart: unless-stopped
     networks:
       - proxy-bridge
 
   nginx-cloudflare-tunnel:
     image: cloudflare/cloudflared:latest
     container_name: nginx_cloudflare_tunnel
+    restart: unless-stopped
     command: tunnel run
     environment:
       - TUNNEL_TOKEN=${CF_TUNNEL_TOKEN}
-    restart: unless-stopped
     networks:
       - proxy-bridge
 
@@ -34,16 +34,16 @@ services:
     image: "jc21/nginx-proxy-manager:latest"
     container_name: nginx_proxy_manager
     restart: unless-stopped
-    volumes:
-      - ${NPM_DATA_LOCATION}:/data
-      - ${NPM_DATA_LOCATION}/letsencrypt:/etc/letsencrypt
     environment:
       INITIAL_ADMIN_EMAIL: ${NPM_INITIAL_ADMIN_EMAIL}
       INITIAL_ADMIN_PASSWORD: ${NPM_INITIAL_ADMIN_PASSWORD}
+    volumes:
+      - ${NPM_DATA_LOCATION}:/data
+      - ${NPM_DATA_LOCATION}/letsencrypt:/etc/letsencrypt
     networks:
       - proxy-bridge
 
 networks:
   proxy-bridge:
     name: proxy_bridge
-    driver: bridge
+    external: true
