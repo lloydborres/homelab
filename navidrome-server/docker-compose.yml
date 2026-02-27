@@ -1,29 +1,19 @@
 services:
-  navidrome-tailscale:
-    image: tailscale/tailscale:latest
-    container_name: navidrome_tailscale
-    hostname: ${TS_HOSTNAME}
-    cap_add:
-      - NET_ADMIN
-      - NET_RAW
-    environment:
-      - TS_AUTHKEY=${TS_AUTHKEY}
-      - TS_STATE_DIR=/var/lib/tailscale
-      - TS_USERSPACE=false
-      - TS_SERVE_CONFIG=/config/tailscale.json
-    volumes:
-      - ${TS_STATE_LOCATION}:/var/lib/tailscale
-      - ./config:/config
-    devices:
-      - /dev/net/tun:/dev/net/tun
-    restart: unless-stopped
-
   navidrome-server:
     image: deluan/navidrome:latest
     container_name: navidrome_server
-    network_mode: "service:navidrome-tailscale"
-    user: ${PUID}:${PGID}
     restart: unless-stopped
+    user: ${PUID}:${PGID}
+    environment:
+      ND_EXTAUTH_TRUSTEDSOURCES: ${NAVIDROME_EXTAUTH_TRUSTEDSOURCES}
+      ND_EXTAUTH_USERHEADER: X-authentik-username
     volumes:
       - "${NAVIDROME_Data_LOCATION}:/data"
       - "${NAVIDROME_MEDIA_LOCATION}:/music:ro"
+    networks:
+      - proxy-bridge
+
+networks:
+  proxy-bridge:
+    name: proxy_bridge
+    external: true
