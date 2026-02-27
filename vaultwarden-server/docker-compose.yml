@@ -3,14 +3,16 @@ services:
     image: vaultwarden/server:latest
     container_name: vaultwarden_server
     restart: unless-stopped
+    user: ${PUID}:${PGID}
     environment:
       DOMAIN: ${VW_DOMAIN}
+      # ADMIN_TOKEN: ${VW_ADMIN_TOKEN}
     volumes:
       - ${VW_DATA_LOCATION}:/data/
     networks:
       - proxy-bridge
 
 networks:
-  proxy-bridge: # From nginx-proxy-manager
+  proxy-bridge:
     name: proxy_bridge
     external: true

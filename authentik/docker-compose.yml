@@ -1,11 +1,8 @@
 services:
   authentik-postgresql:
-    env_file:
-      - .env
-    environment:
-      POSTGRES_DB: ${PG_DB:-authentik}
-      POSTGRES_PASSWORD: ${PG_PASS:?database password required}
-      POSTGRES_USER: ${PG_USER:-authentik}
+    image: docker.io/library/postgres:16-alpine
+    container_name: authentik_postgresql
+    restart: unless-stopped
     healthcheck:
       interval: 30s
       retries: 5
@@ -14,19 +11,25 @@ services:
         - CMD-SHELL
         - pg_isready -d $${POSTGRES_DB} -U $${POSTGRES_USER}
       timeout: 5s
-    image: docker.io/library/postgres:16-alpine
-    container_name: authentik_postgresql
-    restart: unless-stopped
+    env_file:
+      - .env
+    environment:
+      POSTGRES_DB: ${PG_DB:-authentik}
+      POSTGRES_PASSWORD: ${PG_PASS:?database password required}
+      POSTGRES_USER: ${PG_USER:-authentik}
     volumes:
       - ${AUTHENTIK_DB_LOCATION}:/var/lib/postgresql/data
     networks:
       - authentik-network
 
   authentik-server:
-    command: server
+    image: ${AUTHENTIK_IMAGE:-ghcr.io/goauthentik/server}:${AUTHENTIK_TAG:-2025.10.3}
+    container_name: authentik_server
+    restart: unless-stopped
     depends_on:
       authentik-postgresql:
         condition: service_healthy
+    command: server
     env_file:
       - .env
     environment:
@@ -35,21 +38,27 @@ services:
       AUTHENTIK_POSTGRESQL__PASSWORD: ${PG_PASS}
       AUTHENTIK_POSTGRESQL__USER: ${PG_USER:-authentik}
       AUTHENTIK_SECRET_KEY: ${AUTHENTIK_SECRET_KEY:?secret key required}
-    image: ${AUTHENTIK_IMAGE:-ghcr.io/goauthentik/server}:${AUTHENTIK_TAG:-2025.10.3}
-    container_name: authentik_server
-    restart: unless-stopped
     volumes:
       - ${AUTHENTIK_MEDIA_LOCATION}:/media
       - ${AUTHENTIK_TEMPLATES_LOCATION}:/templates
+    deploy:
+      resources:
+        limits:
+          cpus: "${AUTHENTIK_LIMIT_CPU:-0.5}"
+          memory: ${AUTHENTIK_LIMIT_MEMORY:-512M}
     networks:
       - authentik-network
       - proxy-bridge
 
   authentik-worker:
-    command: worker
+    image: ${AUTHENTIK_IMAGE:-ghcr.io/goauthentik/server}:${AUTHENTIK_TAG:-2025.10.3}
+    container_name: authentik_worker
+    restart: unless-stopped
     depends_on:
       authentik-postgresql:
         condition: service_healthy
+    user: root
+    command: worker
     env_file:
       - .env
     environment:
@@ -58,15 +67,16 @@ services:
       AUTHENTIK_POSTGRESQL__PASSWORD: ${PG_PASS}
       AUTHENTIK_POSTGRESQL__USER: ${PG_USER:-authentik}
       AUTHENTIK_SECRET_KEY: ${AUTHENTIK_SECRET_KEY:?secret key required}
-    image: ${AUTHENTIK_IMAGE:-ghcr.io/goauthentik/server}:${AUTHENTIK_TAG:-2025.10.3}
-    container_name: authentik_worker
-    restart: unless-stopped
-    user: root
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
       - ${AUTHENTIK_MEDIA_LOCATION}:/media
       - ${AUTHENTIK_CERTS_LOCATION}:/certs
       - ${AUTHENTIK_TEMPLATES_LOCATION}:/templates
+    deploy:
+      resources:
+        limits:
+          cpus: "${AUTHENTIK_WORKER_LIMIT_CPU:-0.5}"
+          memory: ${AUTHENTIK_WORKER_LIMIT_MEMORY:-256M}
     networks:
       - authentik-network
 
@@ -74,6 +84,6 @@ networks:
   authentik-network:
     name: authentik_default
 
-  proxy-bridge: # From nginx-proxy-manager
+  proxy-bridge:
     name: proxy_bridge
     external: true
