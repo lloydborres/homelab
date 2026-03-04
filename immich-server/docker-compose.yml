@@ -43,6 +43,8 @@ services:
     healthcheck:
       test: redis-cli ping || exit 1
     restart: always
+    volumes:
+      - redis-data:/data
     networks:
       - immich-network
 
@@ -63,6 +65,9 @@ services:
 
 volumes:
   model-cache:
+    name: immich_model_cache
+  redis-data:
+    name: immich_redis_data
 
 networks:
   immich-network:
