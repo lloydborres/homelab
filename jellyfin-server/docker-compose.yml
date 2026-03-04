@@ -2,21 +2,21 @@ services:
   jellyfin-server:
     image: jellyfin/jellyfin
     container_name: jellyfin_server
+    restart: "unless-stopped"
     group_add:
       - ${JELLYFIN_GROUP_ADD}
+    devices:
+      - /dev/dri/renderD128:/dev/dri/renderD128
     volumes:
       - ${JELLYFIN_CONFIG_LOCATION}:/config
       - ${JELLYFIN_CACHE_LOCATION}:/cache
       - type: bind
         source: ${JELLYFIN_MEDIA_LOCATION}
         target: /media
-    restart: "unless-stopped"
-    devices:
-      - /dev/dri/renderD128:/dev/dri/renderD128
     networks:
       - proxy-bridge
 
 networks:
-  proxy-bridge: # From nginx-proxy-manager
+  proxy-bridge:
     name: proxy_bridge
     external: true
