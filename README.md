@@ -37,35 +37,34 @@
 
 ### Running Services
 
-- [x] [**Nginx Proxy Manager** with **Tailscale** and **Cloudflare Tunnel**](/nginx-proxy-manager/)
+- [**Nginx Proxy Manager** with **Tailscale** and **Cloudflare Tunnel**](/nginx-proxy-manager/)
   - A reverse proxy
-- [x] [**Authentik**](/authentik/)
+  - https://nginxproxymanager.com/guide/#quick-setup
+- [**Authentik**](/authentik/)
   - An IdP (Identity Provider) and SSO (Single Sign On) platform
-- [x] [**Jellyfin**](/jellyfin-server/)
+  - https://docs.goauthentik.io/install-config/install/docker-compose
+- [**Jellyfin**](/jellyfin-server/)
   - A media server
-- [x] [**Immich**](/immich-server/)
+  - https://jellyfin.org/docs/general/installation/container
+- [**Immich**](/immich-server/)
   - A photo and video management solution
-- [x] [**Vaultwarden**](/vaultwarden-server/)
+  - https://docs.immich.app/install/docker-compose
+- [**Vaultwarden**](/vaultwarden-server/)
   - A password manager, alternate implementation of Bitwarden
-- [x] [**Pi-hole** with Tailscale](/pihole/)
+  - https://github.com/dani-garcia/vaultwarden
+- [**Pi-hole** with Tailscale](/pihole/)
   - A DNS/Ad blocker
-- [x] [**Forgejo**](/forgejo-server/)
+  - https://github.com/pi-hole/docker-pi-hole/#running-pi-hole-docker
+- [**Forgejo**](/forgejo-server/)
   - A Git Repository
-- [x] [**Navidrome**](/navidrome-server/)
+  - https://forgejo.org/docs/latest/admin/installation/docker/
+- [**Navidrome**](/navidrome-server/)
   - A music server
-- [x] [**RomM**](/romm-server/)
+  - https://www.navidrome.org/docs/installation/docker
+- [**RomM**](/romm-server/)
   - A ROM Manager with emulator
+  - https://github.com/rommapp/romm/blob/master/examples/docker-compose.example.yml
 
-### Experimenting
+## Setup
 
-- [ ] Containerizing a React Application
-
-### Planned Additions
-
-- [ ] Joplin
-- [ ] Headscale (?)
-
-## Setup Guide
-
-1. [Setup Server](./.docs/1%20Setup%20Server.md)
-2. [Setup Reverse Proxy](./.docs/2%20Setup%20Reverse%20Proxy.md)
+Clone the repository or download necessary docker compose and env files and follow the [Wiki page](/wiki).
