@@ -67,4 +67,4 @@
 
 ## Setup
 
-Clone the repository or download necessary docker compose and env files and follow the [Wiki page](/wiki).
+Clone the repository or download necessary docker compose and env files and follow the [Wiki page](../../wiki).
