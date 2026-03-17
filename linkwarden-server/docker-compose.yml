@@ -1,0 +1,50 @@
+services:
+  linkwarden-tailscale:
+    image: tailscale/tailscale:latest
+    container_name: linkwarden_tailscale
+    restart: unless-stopped
+    hostname: ${TS_HOSTNAME}
+    cap_add:
+      - NET_ADMIN
+      - NET_RAW
+    devices:
+      - /dev/net/tun:/dev/net/tun
+    environment:
+      - TS_AUTHKEY=${TS_AUTHKEY}
+      - TS_STATE_DIR=/var/lib/tailscale
+      - TS_USERSPACE=false
+      - TS_SERVE_CONFIG=/config/tailscale.json
+    volumes:
+      - ${TS_STATE_LOCATION}:/var/lib/tailscale
+      - ./config:/config
+
+  linkwarden-postgres:
+    image: postgres:16-alpine
+    container_name: linkwarden_postgres
+    restart: always
+    env_file: .env
+    volumes:
+      - ${LINKWARDEN_DB_LOCATION}:/var/lib/postgresql/data
+
+  linkwarden-server:
+    image: ghcr.io/linkwarden/linkwarden:latest
+    container_name: linkwarden_server
+    restart: always
+    depends_on:
+      - linkwarden-postgres
+      - linkwarden-meilisearch
+    env_file: .env
+    environment:
+      - DATABASE_URL=postgresql://postgres:${POSTGRES_PASSWORD}@linkwarden-postgres:5432/postgres
+    volumes:
+      - ${LINKWARDEN_DATA_LOCATION}:/data/data
+    network_mode: "service:linkwarden-tailscale"
+
+  linkwarden-meilisearch:
+    image: getmeili/meilisearch:v1.12.8
+    container_name: linkwarden_meilisearch
+    restart: always
+    env_file:
+      - .env
+    volumes:
+      - ${MEILI_DATA_LOCATION}:/meili_data
