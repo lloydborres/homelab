@@ -1,0 +1,37 @@
+services:
+  syncthing-tailscale:
+    image: tailscale/tailscale:latest
+    container_name: syncthing_tailscale
+    restart: unless-stopped
+    hostname: ${TS_HOSTNAME}
+    cap_add:
+      - NET_ADMIN
+      - NET_RAW
+    devices:
+      - /dev/net/tun:/dev/net/tun
+    environment:
+      - TS_AUTHKEY=${TS_AUTHKEY}
+      - TS_STATE_DIR=/var/lib/tailscale
+      - TS_USERSPACE=false
+      - TS_SERVE_CONFIG=/config/tailscale.json
+    volumes:
+      - ${TS_STATE_LOCATION}:/var/lib/tailscale
+      - ./config:/config
+
+  syncthing-client:
+    image: syncthing/syncthing
+    container_name: syncthing_client
+    restart: unless-stopped
+    healthcheck:
+      test: curl -fkLsS -m 2 127.0.0.1:8384/rest/noauth/health | grep -o --color=never OK || exit 1
+      interval: 1m
+      timeout: 10s
+      retries: 3
+    environment:
+      - PUID=${PUID}
+      - PGID=${PGID}
+    volumes:
+      - ${SYNC_CONFIG_LOCATION}:/var/syncthing
+      - ${SYNC_FOLDER_LOCATION_1}:/data1
+      # - ${SYNC_FOLDER_LOCATION_2}:/data2
+    network_mode: "service:syncthing-tailscale"
