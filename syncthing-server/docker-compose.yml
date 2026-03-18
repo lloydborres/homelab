@@ -1,0 +1,24 @@
+services:
+  syncthing-server:
+    image: syncthing/syncthing
+    container_name: syncthing_server
+    restart: unless-stopped
+    healthcheck:
+      test: curl -fkLsS -m 2 127.0.0.1:8384/rest/noauth/health | grep -o --color=never OK || exit 1
+      interval: 1m
+      timeout: 10s
+      retries: 3
+    environment:
+      - PUID=${PUID}
+      - PGID=${PGID}
+    volumes:
+      - ${SYNC_CONFIG_LOCATION}:/var/syncthing
+      - ${SYNC_FOLDER_LOCATION_1}:/data1
+      # - ${SYNC_FOLDER_LOCATION_2}:/data2
+    networks:
+      - proxy-bridge
+
+networks:
+  proxy-bridge:
+    name: proxy_bridge
+    external: true
