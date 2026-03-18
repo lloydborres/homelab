@@ -32,19 +32,9 @@ services:
     restart: always
     depends_on:
       - linkwarden-postgres
-      - linkwarden-meilisearch
     env_file: .env
     environment:
       - DATABASE_URL=postgresql://postgres:${POSTGRES_PASSWORD}@linkwarden-postgres:5432/postgres
     volumes:
       - ${LINKWARDEN_DATA_LOCATION}:/data/data
     network_mode: "service:linkwarden-tailscale"
-
-  linkwarden-meilisearch:
-    image: getmeili/meilisearch:v1.12.8
-    container_name: linkwarden_meilisearch
-    restart: always
-    env_file:
-      - .env
-    volumes:
-      - ${MEILI_DATA_LOCATION}:/meili_data
