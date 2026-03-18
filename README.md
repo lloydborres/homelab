@@ -64,6 +64,9 @@
 - [**RomM**](/romm-server/)
   - A ROM Manager with emulator
   - https://github.com/rommapp/romm/blob/master/examples/docker-compose.example.yml
+- [**Linkwarden**](/linkwarden-server//)
+  - A bookmark manager
+  - https://docs.linkwarden.app/self-hosting/installation
 
 ## Setup
 
