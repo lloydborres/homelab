@@ -1,23 +1,4 @@
 services:
-  linkwarden-tailscale:
-    image: tailscale/tailscale:latest
-    container_name: linkwarden_tailscale
-    restart: unless-stopped
-    hostname: ${TS_HOSTNAME}
-    cap_add:
-      - NET_ADMIN
-      - NET_RAW
-    devices:
-      - /dev/net/tun:/dev/net/tun
-    environment:
-      - TS_AUTHKEY=${TS_AUTHKEY}
-      - TS_STATE_DIR=/var/lib/tailscale
-      - TS_USERSPACE=false
-      - TS_SERVE_CONFIG=/config/tailscale.json
-    volumes:
-      - ${TS_STATE_LOCATION}:/var/lib/tailscale
-      - ./config:/config
-
   linkwarden-postgres:
     image: postgres:16-alpine
     container_name: linkwarden_postgres
@@ -25,6 +6,8 @@ services:
     env_file: .env
     volumes:
       - ${LINKWARDEN_DB_LOCATION}:/var/lib/postgresql/data
+    networks:
+      - linkwarden-network
 
   linkwarden-server:
     image: ghcr.io/linkwarden/linkwarden:latest
@@ -37,4 +20,15 @@ services:
       - DATABASE_URL=postgresql://postgres:${POSTGRES_PASSWORD}@linkwarden-postgres:5432/postgres
     volumes:
       - ${LINKWARDEN_DATA_LOCATION}:/data/data
-    network_mode: "service:linkwarden-tailscale"
+    networks:
+      - linkwarden-network
+      - proxy-bridge
+
+networks:
+  linkwarden-network:
+    name: linkwarden_default
+    external: false
+
+  proxy-bridge:
+    name: proxy_bridge
+    external: true
