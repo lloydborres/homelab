@@ -64,9 +64,12 @@
 - [**RomM**](/romm-server/)
   - A ROM Manager with emulator
   - https://github.com/rommapp/romm/blob/master/examples/docker-compose.example.yml
-- [**Linkwarden**](/linkwarden-server//)
+- [**Linkwarden**](/linkwarden-server/)
   - A bookmark manager
   - https://docs.linkwarden.app/self-hosting/installation
+- [**Syncthing Server**](/syncthing-server/) and [**Syncthing Client**](/syncthing-client/)
+  - A file syncing manager
+  - https://github.com/syncthing/syncthing/blob/main/README-Docker.md
 
 ## Setup
 
